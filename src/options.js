@@ -19,8 +19,14 @@ function init() {
     }, false)
     updateCacheInfoInfo()
 
+    var background = chrome.extension.getBackgroundPage();
+    var su = document.getElementById('siteinfo_url');
+    su.value = background.localStorage['siteinfo_url'] || '';
     var us = document.getElementById('update_siteinfo')
-    us.addEventListener('click', updateCacheInfo)
+    us.addEventListener('click', function () {
+        background.localStorage['siteinfo_url'] = su.value;
+        updateCacheInfo()
+    });
 }
 
 function updateCacheInfoInfo() {

@@ -12,6 +12,9 @@ var excludes = [
     'http://api.tweetmeme.com/button.js*'
 ]
 function init() {
+    if (localStorage['siteinfo_url']) {
+        SITEINFO_IMPORT_URLS[1] = localStorage['siteinfo_url'];
+    }
     if (!localStorage['settings']) {
         var defaultSettings = {
             extension_path: chrome.extension.getURL(''),
@@ -49,7 +52,7 @@ function init() {
                 })
             }
             else if (message.name == 'siteinfo_meta') {
-                var u = SITEINFO_IMPORT_URLS[0]
+                var u = SITEINFO_IMPORT_URLS[1] || SITEINFO_IMPORT_URLS[0]
                 var len = siteinfo[u].info.length
                 var updated_at = siteinfo[u].expire - CACHE_EXPIRE
                 con.postMessage({ name: message.name, len: len, updated_at: updated_at })
@@ -118,6 +121,16 @@ function reduceWedataJSON(data) {
 function refreshSiteinfo(opt) {
     var opt = opt || {}
     var cache = JSON.parse(localStorage['cacheInfo'] || '{}')
+    if (localStorage['siteinfo_url']) {
+        SITEINFO_IMPORT_URLS[1] = localStorage['siteinfo_url'];
+    }
+    else if (SITEINFO_IMPORT_URLS[1]) {
+        if (cache[SITEINFO_IMPORT_URLS[1]]) {
+            delete cache[SITEINFO_IMPORT_URLS[1]];
+            localStorage['cacheInfo'] = JSON.stringify(cache);
+        }
+        delete SITEINFO_IMPORT_URLS[1];
+    }
     SITEINFO_IMPORT_URLS.forEach(function(url) {
         if (opt.force || !cache[url] || (cache[url].expire && new Date(cache[url].expire) < new Date())) {
             var callback = function(res) {
