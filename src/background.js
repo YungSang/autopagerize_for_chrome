@@ -32,6 +32,9 @@ function init() {
             }
             else if (message.name == 'siteinfo') {
                 var res = SITEINFO_IMPORT_URLS.reduce(function(r, url) {
+                    if (!siteinfo[url]) {
+                        return r;
+                    }
                     return r.concat(siteinfo[url].info)
                 }, []).filter(function(s) {
                     try {
