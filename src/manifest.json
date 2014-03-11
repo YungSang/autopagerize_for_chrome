@@ -18,7 +18,8 @@
   "name": "AutoPagerize",
   "permissions": [
     "http://wedata.net/*",
-    "tabs"
+    "tabs",
+    "contextMenus"
   ],
   "background": {
     "page": "background.html"

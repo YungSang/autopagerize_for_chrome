@@ -176,3 +176,12 @@ function get(url, callback, opt) {
     return xhr
 }
 
+chrome.contextMenus.create({
+    title    : 'AutoPagerize - Refresh SITEINFO',
+    contexts : ['all'],
+    onclick  : function (info, tab) {
+        refreshSiteinfo({ force: true, callback: function() {
+            alert(chrome.i18n.getMessage('update_siteinfo_complete'));
+        }});
+    }
+});
